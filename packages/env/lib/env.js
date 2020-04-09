@@ -435,16 +435,16 @@ async function checkDatabaseConnection( { dockerComposeConfigPath, debug } ) {
  * @param {Config} config The wp-env config object.
  */
 async function configureWordPress( environment, config ) {
-	const containerName = environment === 'development' ? 'cli' : 'tests-cli';
-
-	const options = {
-		config: config.dockerComposeConfigPath,
-		commandOptions: [ '--rm' ],
-		log: config.debug,
-	};
-
 	const dockerRun = async ( command ) =>
-		await dockerCompose.run( containerName, command, options );
+		await dockerCompose.run(
+			environment === 'development' ? 'cli' : 'tests-cli',
+			command,
+			{
+				config: config.dockerComposeConfigPath,
+				commandOptions: [ '--rm' ],
+				log: config.debug,
+			}
+		);
 
 	const port = environment === 'development' ? config.port : config.testsPort;
 
