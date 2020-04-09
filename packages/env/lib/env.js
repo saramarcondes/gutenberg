@@ -443,24 +443,23 @@ async function configureWordPress( environment, config ) {
 		log: config.debug,
 	};
 
+	const dockerRun = async ( command ) =>
+		await dockerCompose.run( containerName, command, options );
+
 	const port = environment === 'development' ? config.port : config.testsPort;
 
 	// Install WordPress.
-	await dockerCompose.run(
-		containerName,
-		[
-			'wp',
-			'core',
-			'install',
-			`--url=localhost:${ port }`,
-			`--title=${ config.name }`,
-			'--admin_user=admin',
-			'--admin_password=password',
-			'--admin_email=wordpress@example.com',
-			'--skip-email',
-		],
-		options
-	);
+	await dockerRun( [
+		'wp',
+		'core',
+		'install',
+		`--url=localhost:${ port }`,
+		`--title=${ config.name }`,
+		'--admin_user=admin',
+		'--admin_password=password',
+		'--admin_email=wordpress@example.com',
+		'--skip-email',
+	] );
 
 	// Set wp-config.php values.
 	for ( const [ key, value ] of Object.entries( config.config ) ) {
@@ -468,36 +467,33 @@ async function configureWordPress( environment, config ) {
 		if ( typeof value !== 'string' ) {
 			command.push( '--raw' );
 		}
-		await dockerCompose.run( containerName, command, options );
+		await dockerRun( command );
 	}
 
 	// Activate all plugins.
-	await dockerCompose.run(
-		containerName,
-		'wp plugin activate --all',
-		options
-	);
+	await dockerRun( 'wp plugin activate --all' );
 
-	// Get the list of themes available to WordPress.
-	const themeOutput = await dockerCompose.run(
-		containerName,
-		'wp theme list --fields=name',
-		options
-	);
+	const getThemeToActivate = async () => {
+		// Use the first if a list of themes is passed.
+		if ( Array.isArray( config.themeSources ) ) {
+			return config.themeSources[ 0 ];
+		}
+		// Get the list of themes available to WordPress.
+		const themeOutput = await dockerRun( 'wp theme list --fields=name' );
 
-	// In case of an error getting the themes, do nothing.
-	if ( themeOutput.exitCode !== 0 ) {
-		return;
-	}
+		// In case of an error getting the themes, do nothing.
+		if ( themeOutput.exitCode !== 0 ) {
+			return null;
+		}
 
-	// Index 0 contains "name" (the header of the output), so use next index.
-	const [ , firstTheme ] = themeOutput.out.split( '\n' );
-	if ( firstTheme ) {
-		await dockerCompose.run(
-			containerName,
-			[ 'wp', 'theme', 'activate', firstTheme ],
-			options
-		);
+		// Index 0 contains "name" (the header of the output), so use next index.
+		return themeOutput.out.split( '\n' )[ 1 ];
+	};
+
+	// Activate a theme if we can find one.
+	const theme = getThemeToActivate( config );
+	if ( theme ) {
+		await dockerRun( [ 'wp', 'theme', 'activate', theme ] );
 	}
 }
 
