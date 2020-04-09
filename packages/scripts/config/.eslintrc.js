@@ -1,10 +1,4 @@
-/**
- * Internal dependencies
- */
-const defaultPrettierConfig = require( './.prettierrc' );
-const { hasPrettierConfig } = require( '../utils' );
-
-const eslintConfig = {
+module.exports = {
 	root: true,
 	extends: [
 		'plugin:@wordpress/eslint-plugin/recommended',
@@ -16,17 +10,3 @@ const eslintConfig = {
 		'plugin:@wordpress/eslint-plugin/test-unit',
 	],
 };
-
-if ( ! hasPrettierConfig() ) {
-	eslintConfig.rules = {
-		'prettier/prettier': [
-			'error',
-			defaultPrettierConfig,
-			{
-				usePrettierrc: false,
-			},
-		],
-	};
-}
-
-module.exports = eslintConfig;

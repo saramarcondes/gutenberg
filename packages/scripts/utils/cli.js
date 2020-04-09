@@ -1,29 +1,14 @@
 /**
  * External dependencies
  */
-const minimist = require( 'minimist' );
 const spawn = require( 'cross-spawn' );
+
+const { fromScriptsRoot, hasScriptFile } = require( './file' );
 
 /**
  * Internal dependencies
  */
-const { fromScriptsRoot, hasScriptFile } = require( './file' );
-const { exit, getArgsFromCLI } = require( './process' );
-
-const getArgFromCLI = ( arg ) => {
-	for ( const cliArg of getArgsFromCLI() ) {
-		const [ name, value ] = cliArg.split( '=' );
-		if ( name === arg ) {
-			return value || null;
-		}
-	}
-};
-
-const hasArgInCLI = ( arg ) => getArgFromCLI( arg ) !== undefined;
-
-const getFileArgsFromCLI = () => minimist( getArgsFromCLI() )._;
-
-const hasFileArgInCLI = () => getFileArgsFromCLI().length > 0;
+const { exit } = require( './process' );
 
 const handleSignal = ( signal ) => {
 	if ( signal === 'SIGKILL' ) {
@@ -78,10 +63,5 @@ const spawnScript = ( scriptName, args = [] ) => {
 };
 
 module.exports = {
-	getArgFromCLI,
-	getArgsFromCLI,
-	getFileArgsFromCLI,
-	hasArgInCLI,
-	hasFileArgInCLI,
 	spawnScript,
 };

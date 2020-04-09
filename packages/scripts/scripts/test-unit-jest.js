@@ -16,9 +16,14 @@ process.on( 'unhandledRejection', ( err ) => {
 const jest = require( 'jest' );
 
 /**
+ * WordPress dependencies
+ */
+const { getArgsFromCLI, hasJestConfig } = require( '@wordpress/scripts-utils' );
+
+/**
  * Internal dependencies
  */
-const { fromConfigRoot, getArgsFromCLI, hasJestConfig } = require( '../utils' );
+const { fromConfigRoot } = require( '../utils' );
 
 const config = ! hasJestConfig()
 	? [

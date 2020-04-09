@@ -13,17 +13,21 @@ const { sync: dirGlob } = require( 'dir-glob' );
 const { sync: readPkgUp } = require( 'read-pkg-up' );
 
 /**
- * Internal dependencies
+ * WordPress dependencies
  */
 const {
-	fromConfigRoot,
 	fromProjectRoot,
 	getArgFromCLI,
 	getFileArgsFromCLI,
 	hasArgInCLI,
 	hasPrettierConfig,
 	hasProjectFile,
-} = require( '../utils' );
+} = require( '@wordpress/scripts-utils' );
+
+/**
+ * Internal dependencies
+ */
+const { fromConfigRoot } = require( '../utils' );
 
 // Check if the project has wp-prettier installed and if the project has a Prettier config
 function checkPrettier() {

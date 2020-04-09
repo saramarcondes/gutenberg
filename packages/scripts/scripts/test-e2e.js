@@ -16,16 +16,20 @@ process.on( 'unhandledRejection', ( err ) => {
 const jest = require( 'jest' );
 
 /**
- * Internal dependencies
+ * WordPress dependencies
  */
 const {
-	fromConfigRoot,
 	getArgFromCLI,
 	getArgsFromCLI,
 	hasArgInCLI,
 	hasProjectFile,
 	hasJestConfig,
-} = require( '../utils' );
+} = require( '@wordpress/scripts-utils' );
+
+/**
+ * Internal dependencies
+ */
+const { fromConfigRoot } = require( '../utils' );
 
 // Provides a default config path for Puppeteer when jest-puppeteer.config.js
 // wasn't found at the root of the project or a custom path wasn't defined

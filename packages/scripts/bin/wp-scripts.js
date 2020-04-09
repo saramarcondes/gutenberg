@@ -3,7 +3,12 @@
 /**
  * Internal dependencies
  */
-const { getArgsFromCLI, spawnScript } = require( '../utils' );
+const { getArgsFromCLI } = require( '@wordpress/scripts-utils' );
+
+/**
+ * Internal dependencies
+ */
+const { spawnScript } = require( '../utils' );
 
 const [ scriptName, ...nodesArgs ] = getArgsFromCLI();
 

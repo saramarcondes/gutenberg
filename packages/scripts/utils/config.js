@@ -4,42 +4,20 @@
 const { basename } = require( 'path' );
 
 /**
- * Internal dependencies
+ * WordPress dependencies
  */
 const {
 	getArgsFromCLI,
 	getFileArgsFromCLI,
 	hasArgInCLI,
 	hasFileArgInCLI,
-} = require( './cli' );
-const { fromConfigRoot, hasProjectFile } = require( './file' );
-const { hasPackageProp } = require( './package' );
+	hasProjectFile,
+} = require( '@wordpress/scripts-utils' );
 
-// See https://babeljs.io/docs/en/config-files#configuration-file-types
-const hasBabelConfig = () =>
-	hasProjectFile( '.babelrc.js' ) ||
-	hasProjectFile( '.babelrc.json' ) ||
-	hasProjectFile( 'babel.config.js' ) ||
-	hasProjectFile( 'babel.config.json' ) ||
-	hasProjectFile( '.babelrc' ) ||
-	hasPackageProp( 'babel' );
-
-const hasJestConfig = () =>
-	hasArgInCLI( '-c' ) ||
-	hasArgInCLI( '--config' ) ||
-	hasProjectFile( 'jest.config.js' ) ||
-	hasProjectFile( 'jest.config.json' ) ||
-	hasPackageProp( 'jest' );
-
-const hasPrettierConfig = () =>
-	hasProjectFile( '.prettierrc.js' ) ||
-	hasProjectFile( '.prettierrc.json' ) ||
-	hasProjectFile( '.prettierrc.toml' ) ||
-	hasProjectFile( '.prettierrc.yaml' ) ||
-	hasProjectFile( '.prettierrc.yml' ) ||
-	hasProjectFile( 'prettier.config.js' ) ||
-	hasProjectFile( '.prettierrc' ) ||
-	hasPackageProp( 'prettier' );
+/**
+ * Internal dependencies
+ */
+const { fromConfigRoot } = require( '../utils' );
 
 const hasWebpackConfig = () =>
 	hasArgInCLI( '--config' ) ||
@@ -106,7 +84,4 @@ const getWebpackArgs = ( additionalArgs = [] ) => {
 
 module.exports = {
 	getWebpackArgs,
-	hasBabelConfig,
-	hasJestConfig,
-	hasPrettierConfig,
 };

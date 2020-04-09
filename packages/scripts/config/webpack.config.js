@@ -9,11 +9,7 @@ const path = require( 'path' );
  * WordPress dependencies
  */
 const DependencyExtractionWebpackPlugin = require( '@wordpress/dependency-extraction-webpack-plugin' );
-
-/**
- * Internal dependencies
- */
-const { hasBabelConfig } = require( '../utils' );
+const { hasBabelConfig } = require( '@wordpress/scripts-utils' );
 
 const isProduction = process.env.NODE_ENV === 'production';
 const mode = isProduction ? 'production' : 'development';
