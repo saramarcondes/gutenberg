@@ -10,6 +10,23 @@ You only need to install one npm module:
 npm install @wordpress/scripts-utils --save-dev
 ```
 
+## API
+
+**Methods included**
+
+- `camelCaseDash`
+- `fromProjectRoot`
+- `getArgFromCLI`
+- `getArgsFromCLI`
+- `getFileArgsFromCLI`
+- `hasBabelConfig`
+- `hasArgInCLI`
+- `hasFileArgInCLI`
+- `hasJestConfig`
+- `hasPackageProp`
+- `hasPrettierConfig`
+- `hasProjectFile`
+
 **Note**: This package requires `node` 10.0.0 or later. It is not compatible with older versions.
 
 <br/><br/><p align="center"><img src="https://s.w.org/style/images/codeispoetry.png?1" alt="Code is Poetry." /></p>
