@@ -13,26 +13,60 @@ import { __ } from '@wordpress/i18n';
 /**
  * Internal dependencies
  */
-import List from './list';
-import { convertBlocksToHeadingList, linearToNestedHeadingList } from './utils';
+import TableOfContentsList from './list';
+import {
+	getHeadingsFromHeadingElements,
+	linearToNestedHeadingList,
+} from './utils';
 
+/** @typedef {import('@wordpress/element').WPComponent} WPComponent */
+
+/**
+ * @typedef WPTableOfContentsEditProps
+ *
+ * @param {string|undefined} className
+ */
+
+/**
+ * Table of Contents block edit component.
+ *
+ * @param {WPTableOfContentsEditProps} props The props.
+ *
+ * @return {WPComponent} The component.
+ */
 export default function TableOfContentsEdit( { className } ) {
 	// Local state; not saved to block attributes. The saved block is dynamic and uses PHP to generate its content.
 	const [ headings, setHeadings ] = useState( [] );
 
-	const headingBlocks = useSelect( ( select ) => {
-		return select( 'core/block-editor' )
-			.getBlocks()
-			.filter( ( block ) => block.name === 'core/heading' );
+	const postContent = useSelect( ( select ) => {
+		return select( 'core/editor' ).getEditedPostContent();
 	}, [] );
 
 	useEffect( () => {
-		const latestHeadings = convertBlocksToHeadingList( headingBlocks );
+		// Create a temporary container to put the post content into, so we can
+		// use the DOM to find all the headings.
+		const tempPostContentDOM = document.createElement( 'div' );
+		tempPostContentDOM.innerHTML = postContent;
+
+		// Remove iframes so that headings inside them aren't counted.
+		for ( const iframe of tempPostContentDOM.querySelectorAll(
+			'iframe'
+		) ) {
+			tempPostContentDOM.removeChild( iframe );
+		}
+
+		const headingElements = tempPostContentDOM.querySelectorAll(
+			'h1, h2, h3, h4, h5, h6'
+		);
+
+		const latestHeadings = getHeadingsFromHeadingElements(
+			headingElements
+		);
 
 		if ( ! isEqual( headings, latestHeadings ) ) {
 			setHeadings( latestHeadings );
 		}
-	}, [ headingBlocks ] );
+	}, [ postContent ] );
 
 	if ( headings.length === 0 ) {
 		return (
@@ -46,7 +80,9 @@ export default function TableOfContentsEdit( { className } ) {
 
 	return (
 		<div className={ className }>
-			<List>{ linearToNestedHeadingList( headings ) }</List>
+			<TableOfContentsList
+				nestedHeadingList={ linearToNestedHeadingList( headings ) }
+			/>
 		</div>
 	);
 }
