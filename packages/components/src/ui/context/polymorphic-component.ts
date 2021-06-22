@@ -40,3 +40,8 @@ export type PolymorphicComponent< T extends React.ElementType, O > = {
 	 */
 	selector: `.${ string }`;
 };
+
+export type ForwardedRef< TElement extends HTMLElement > =
+	| ( ( instance: TElement | null ) => void )
+	| React.MutableRefObject< TElement | null >
+	| null;
