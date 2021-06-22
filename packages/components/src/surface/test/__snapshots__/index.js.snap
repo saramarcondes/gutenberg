@@ -60,21 +60,6 @@ Snapshot Diff:
   </div>
 `;
 
-exports[`props should render borders 1`] = `
-Snapshot Diff:
-- First value
-+ Second value
-
-  <div
--   class="components-surface css-e8z2n8-Surface-getBorders-primary css-1mm2cvy-View em57xhy0"
-+   class="components-surface css-s3w0k-Surface-getBorders-primary css-1mm2cvy-View em57xhy0"
-    data-wp-c16t="true"
-    data-wp-component="Surface"
-  >
-    Surface
-  </div>
-`;
-
 exports[`props should render correctly 1`] = `
 .emotion-0 {
   background-color: #fff;
